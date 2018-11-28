@@ -67,6 +67,12 @@ public class ProjectController {
     projectRepository.delete(project);
   }
 
+  @GetMapping(value = "{projectId}/students", produces = MediaType.APPLICATION_JSON_VALUE)
+  public List<Student> getStudents(@PathVariable("projectId") long projectId) {
+    Project project = get(projectId);
+    return project.getStudents();
+  }
+
   @PostMapping(value = "{projectId}/students", consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Project> postStudent(@PathVariable("projectId") long projectId,
