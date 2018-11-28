@@ -60,6 +60,29 @@ public class StudentController {
     return student.getProjects();
   }
 
+  @PostMapping(value = "{studentId}/projects", consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Student> postProject(@PathVariable("studentId") long studentId,
+      @RequestBody Project partialProject) {
+    Student student = get(studentId);
+    Project project = projectRepository.findById(partialProject.getId()).get();
+    project.getStudents().add(student);
+    projectRepository.save(project);
+    studentRepository.save(student);
+    return ResponseEntity.created(student.getHref()).body(student);
+  }
+
+  @Transactional
+  @DeleteMapping(value = "{studentId}/projects")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteStudent(@PathVariable("studentId") long studentId,
+      @RequestBody Student partialProject) {
+    Project project = projectRepository.findById(partialProject.getId()).get();
+    Student student = studentRepository.findById(studentId).get();
+    project.getStudents().remove(student);
+    projectRepository.save(project);
+  }
+
   @Transactional
   @DeleteMapping(value = "{studentId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
