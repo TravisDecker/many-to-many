@@ -54,6 +54,12 @@ public class StudentController {
     return studentRepository.findById(studentId).get();
   }
 
+  @GetMapping(value = "{studentId}/projects", produces = MediaType.APPLICATION_JSON_VALUE)
+  public List<Project> getProjects(@PathVariable("studentId") long studentId) {
+    Student student = get(studentId);
+    return student.getProjects();
+  }
+
   @Transactional
   @DeleteMapping(value = "{studentId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)

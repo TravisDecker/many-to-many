@@ -84,6 +84,17 @@ public class ProjectController {
     return ResponseEntity.created(project.getHref()).body(project);
   }
 
+  @Transactional
+  @DeleteMapping(value = "{projectId}/students")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteStudent(@PathVariable("projectId") long projectId,
+      @RequestBody Student partialStudent) {
+    Student student = studentRepository.findById(partialStudent.getId()).get();
+    Project project = projectRepository.findById(projectId).get();
+    student.getProjects().remove(project);
+    studentRepository.save(student);
+  }
+
   @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Resource not found")
   @ExceptionHandler(NoSuchElementException.class)
 
